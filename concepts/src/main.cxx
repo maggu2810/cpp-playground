@@ -1,4 +1,6 @@
 #include <concepts>
+#include <memory>
+#include <set>
 
 template<typename T>
 concept foo1 = requires(T v)
@@ -36,6 +38,19 @@ void test(T arg) requires foo1<T> && foo2<T> {
     arg.f1();
     arg.f2(0);
 }
+
+#if 0
+template<typename T> requires foo1<T> && foo2<T>
+class Container {
+public:
+    void add(T *entry) {
+        collection.insert(entry);
+    }
+
+private:
+    std::set<T *> collection;
+};
+#endif
 
 int main(int argc, char *argv[]) {
     return 0;
