@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.28.2)
+find_package(spdlog REQUIRED)
+add_executable(sloc src/main.cxx)
+target_compile_features(sloc PRIVATE cxx_std_23)
+target_link_libraries(sloc PRIVATE spdlog::spdlog)
