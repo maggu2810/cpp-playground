@@ -1,11 +1,30 @@
-#include <spdlog/spdlog.h>
-
 #include <format>
 #include <source_location>
-#include <string_view>
-#include  <type_traits>
+#include <iostream>
+
+
+#if 0
+//#include <spdlog/spdlog.h>
+
 
 namespace logging {
+    template<class... Args>
+    class FormatStringWithLocation {
+    public:
+        constexpr FormatStringWithLocation(const std::format_string<Args...> &_fmt,
+                                           const std::source_location &_sloc = std::source_location::current()) : fmt(
+                _fmt), sloc(_sloc) {}
+
+        const std::format_string<Args...> &fmt;
+        const std::source_location sloc;
+    };
+
+    template<class... Args>
+    void log(std::format_string<Args...> fmt, Args &&... args) {
+        std::cout << std::format(fmt, std::forward<Args>(args)...) << "\n";
+    }
+
+
     [[nodiscard]] constexpr auto
     get_log_source_location(const std::source_location &location = std::source_location::current()) {
         return spdlog::source_loc{location.file_name(), static_cast<std::int32_t>(location.line()),
@@ -83,4 +102,64 @@ int main() {
     LOG_ERROR("hello {}", value);
 
     foo(3);
+    std::cout << std::format("{} {}", "hello word", 42);
+
+    return 0;
 }
+#else
+
+#define LOGGING_IMPL_SLOC_ENABLED 1
+
+namespace logging {
+    namespace impl {
+        class Opaque {
+        public:
+            consteval Opaque(const std::source_location sloc =
+#if LOGGING_IMPL_SLOC_ENABLED
+                    std::source_location::current()
+#else
+                    {}
+#endif
+                    ) : m_sloc(sloc) {}
+
+            [[nodiscard]] constexpr const std::source_location &sloc() const { return m_sloc; };
+        private:
+            const std::source_location m_sloc;
+        };
+    }
+
+    enum class Level {
+        warn, info
+    };
+
+    template<class... Args>
+    void log(impl::Opaque opaque, Level lvl, std::format_string<Args...> fmt, Args &&... args) {
+        std::cout << "level: " << static_cast<int>(lvl) << " | " << opaque.sloc().line() << " => "
+                  << std::format(fmt, std::forward<Args>(args)...) << "\n";
+    }
+
+    template<class... Args>
+    void info(impl::Opaque opaque, std::format_string<Args...> fmt, Args &&... args) {
+        log(opaque, Level::info, fmt, std::forward<Args>(args)...);
+    }
+
+    template<class... Args>
+    void warn(impl::Opaque opaque, std::format_string<Args...> fmt, Args &&... args) {
+        log(opaque, Level::warn, fmt, std::forward<Args>(args)...);
+    }
+
+
+
+}
+
+
+int main() {
+    //std::cout << std::format("{} {}", "hello word", 42);
+    logging::log({}, logging::Level::info, "{} {}", "hello word", 42);
+    logging::info({}, "{} {}", "hello word", 42);
+    logging::warn({}, "{} {}", "hello word", 42);
+
+    return 0;
+}
+
+#endif
