@@ -29,15 +29,15 @@ namespace iface {
 
     std::optional<std::string> get_ifacename(const sockaddr &sa);
 
-    std::optional<std::string> get_ifacename(const sockaddr_storage &sa) {
+    inline std::optional<std::string> get_ifacename(const sockaddr_storage &sa) {
         return get_ifacename(reinterpret_cast<const sockaddr &>(sa));
     }
 
-    std::optional<std::string> get_ifacename(const sockaddr_in &sa) {
+    inline std::optional<std::string> get_ifacename(const sockaddr_in &sa) {
         return get_ifacename(reinterpret_cast<const sockaddr &>(sa));
     }
 
-    std::optional<std::string> get_ifacename(const sockaddr_in6 &sa) {
+    inline std::optional<std::string> get_ifacename(const sockaddr_in6 &sa) {
         return get_ifacename(reinterpret_cast<const sockaddr &>(sa));
     }
 
