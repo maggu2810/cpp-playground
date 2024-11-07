@@ -15,7 +15,7 @@
 #include <sys/socket.h>
 
 namespace iface {
-    std::expected<std::shared_ptr<ifaddrs>, std::string> getaddrinfo();
+    std::expected<std::shared_ptr<ifaddrs>, std::string> getifaddrs();
 
     // get interface name by address
 

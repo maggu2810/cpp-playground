@@ -51,7 +51,7 @@ namespace {
 
     template<int FAMILY, typename ADDRESS_TYPE, std::size_t OFFSET>
     std::optional<std::string> get_iface_name(const ADDRESS_TYPE &address) {
-        const auto ifap = iface::getaddrinfo();
+        const auto ifap = iface::getifaddrs();
         if (!ifap) { return {}; }
 
         for (ifaddrs *ifa = ifap.value().get(); ifa != nullptr; ifa = ifa->ifa_next) {
@@ -68,7 +68,7 @@ namespace {
 }
 
 namespace iface {
-    std::expected<std::shared_ptr<ifaddrs>, std::string> getaddrinfo() {
+    std::expected<std::shared_ptr<ifaddrs>, std::string> getifaddrs() {
         ifaddrs *ifap{};
         if (int rv = getifaddrs(&ifap); rv != 0) {
             const auto err = errno;
@@ -97,7 +97,7 @@ namespace iface {
     }
 
     std::optional<std::string> get_ifacename(const sockaddr &sa) {
-        const auto ifap = getaddrinfo();
+        const auto ifap = getifaddrs();
         if (!ifap) { return {}; }
 
         for (ifaddrs *ifa = ifap.value().get(); ifa != nullptr; ifa = ifa->ifa_next) {
