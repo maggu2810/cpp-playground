@@ -8,7 +8,7 @@
 #include <variant>
 #include <netinet/in.h>
 
-using inaddr_storage =std::variant<std::monostate, in_addr, in6_addr>;
+using inaddr_storage = std::variant<std::monostate, in_addr, in6_addr>;
 
 
 #endif //INADDR_STORAGE_HXX

@@ -2,31 +2,29 @@
 // Created by maggu2810 on 11/6/24.
 //
 
-#ifndef SOCK_HXX
-#define SOCK_HXX
+#ifndef UDPSERVER_HXX
+#define UDPSERVER_HXX
 
-#include <expected>
-#include <memory>
-#include <netdb.h>
+#include "inaddr_storage.hxx"
 
-namespace sock {
-    std::expected<std::shared_ptr<addrinfo>, const char *> getaddrinfo(const char *node,
-                                                                       const char *service,
-                                                                       const addrinfo &hints);
+#include <cstdint>
+#include <string>
+#include <utility>
+#include <sys/types.h>
+#include <sys/socket.h>
 
-    std::string to_string(const sockaddr &sa);
+#include "socket_type.hxx"
 
-    inline std::string to_string(const sockaddr_storage &sa) {
-        return to_string(reinterpret_cast<const sockaddr &>(sa));
-    }
+namespace net {
+    int create_bound_socket(socket_type socket_type, std::uint16_t port, bool non_blocking = false, bool reuse_addr = false);
 
-    inline std::string to_string(const sockaddr_in &sa) {
-        return to_string(reinterpret_cast<const sockaddr &>(sa));
-    }
+    int create_connected_socket(socket_type socket_type, const std::string& host, std::uint16_t port, bool non_blocking = false);
 
-    inline std::string to_string(const sockaddr_in6 &sa) {
-        return to_string(reinterpret_cast<const sockaddr &>(sa));
-    }
-} // sock
+    std::pair<bool, bool> prepare_for_recv_info(int sock);
 
-#endif //SOCK_HXX
+    ssize_t recvfromadv(int sockfd, void *buf, size_t len,
+                        inaddr_storage *host_addr,
+                        sockaddr_storage *peer_addr);
+} // udpserver
+
+#endif //UDPSERVER_HXX

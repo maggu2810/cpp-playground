@@ -7,16 +7,10 @@
 
 #include "inaddr_storage.hxx"
 
-#include <expected>
-#include <ifaddrs.h>
-#include <memory>
 #include <optional>
 #include <string>
-#include <sys/socket.h>
 
 namespace iface {
-    std::expected<std::shared_ptr<ifaddrs>, std::string> getifaddrs();
-
     // get interface name by address
 
     std::optional<std::string> get_ifacename(const inaddr_storage &address);
