@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//
-// Created by maggu2810 on 11/6/24.
-//
-
 #ifndef LOG_HXX
 #define LOG_HXX
 
@@ -60,7 +56,6 @@ namespace logging {
             log(lvl, std::format(fmt, std::forward<Args>(args)...));
         }
     }
-
 
     template<class... Args>
     constexpr void log(level lvl, std::format_string<Args...> fmt, Args &&... args) {

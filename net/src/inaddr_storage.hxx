@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//
-// Created by maggu2810 on 11/7/24.
-//
-
 #ifndef INADDR_STORAGE_HXX
 #define INADDR_STORAGE_HXX
 
