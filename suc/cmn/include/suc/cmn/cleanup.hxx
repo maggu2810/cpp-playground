@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef INADDR_STORAGE_HXX
-#define INADDR_STORAGE_HXX
+#ifndef SUC_CMN_CLEANUP_HXX
+#define SUC_CMN_CLEANUP_HXX
 
-#include <variant>
-#include <netinet/in.h>
+#include <functional>
 
-using inaddr_storage = std::variant<std::monostate, in_addr, in6_addr>;
+namespace suc::cmn {
+    class cleanup {
+    public:
+        explicit cleanup(std::function<void()> &&func);
 
+        ~cleanup();
 
-#endif //INADDR_STORAGE_HXX
+    private:
+        std::function<void()> m_func;
+    };
+}
+
+#endif //SUC_CMN_CLEANUP_HXX

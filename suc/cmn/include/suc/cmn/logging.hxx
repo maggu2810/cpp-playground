@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LOG_HXX
-#define LOG_HXX
+#ifndef SUC_CMN_LOGGING_HXX
+#define SUC_CMN_LOGGING_HXX
 
 #include <iostream>
 #include <ostream>
@@ -31,16 +31,16 @@
  * | 7 | DEBUG     | Debug-level messages             |
  */
 
-#define LOGD(...) logging::debug(__VA_ARGS__)
-#define LOGI(...) logging::info(__VA_ARGS__)
-#define LOGN(...) logging::notice(__VA_ARGS__)
-#define LOGW(...) logging::warn(__VA_ARGS__)
-#define LOGE(...) logging::err(__VA_ARGS__)
-#define LOGC(...) logging::crit(__VA_ARGS__)
-#define LOGA(...) logging::alert(__VA_ARGS__)
-#define LOGU(...) logging::emerg(__VA_ARGS__)
+#define LOGD(...) suc::logging::debug(__VA_ARGS__)
+#define LOGI(...) suc::logging::info(__VA_ARGS__)
+#define LOGN(...) suc::logging::notice(__VA_ARGS__)
+#define LOGW(...) suc::logging::warn(__VA_ARGS__)
+#define LOGE(...) suc::logging::err(__VA_ARGS__)
+#define LOGC(...) suc::logging::crit(__VA_ARGS__)
+#define LOGA(...) suc::logging::alert(__VA_ARGS__)
+#define LOGU(...) suc::logging::emerg(__VA_ARGS__)
 
-namespace logging {
+namespace suc::logging {
     enum class level {
         emergency, alert, critical, error, warning, notice, info, debug
     };
@@ -103,4 +103,4 @@ namespace logging {
     }
 }
 
-#endif //LOG_HXX
+#endif //SUC_CMN_LOGGING_HXX

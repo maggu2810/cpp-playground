@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef UDPSERVER_HXX
-#define UDPSERVER_HXX
+#ifndef SUC_NET_SOCK_HXX
+#define SUC_NET_SOCK_HXX
 
 #include "inaddr_storage.hxx"
 
@@ -25,7 +25,7 @@
 
 #include "socket_type.hxx"
 
-namespace net {
+namespace suc::net {
     int create_bound_socket(socket_type socket_type, std::uint16_t port, bool non_blocking = false, bool reuse_addr = false);
 
     int create_connected_socket(socket_type socket_type, const std::string& host, std::uint16_t port, bool non_blocking = false);
@@ -35,6 +35,6 @@ namespace net {
     ssize_t recvfromadv(int sockfd, void *buf, size_t len,
                         inaddr_storage *host_addr,
                         sockaddr_storage *peer_addr);
-} // udpserver
+}
 
-#endif //UDPSERVER_HXX
+#endif //SUC_NET_SOCK_HXX

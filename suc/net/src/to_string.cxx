@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "to_string.hxx"
+#include <suc/net/to_string.hxx>
+
+#include <suc/net/getaddrinfo.hxx>
+#include <suc/cmn/overloaded.hxx>
 
 #include <sstream>
 #include <cstring>
 #include <arpa/inet.h>
-
-#include "getaddrinfo.hxx"
-#include "overloaded.hxx"
 
 namespace {
     template<typename INADDR, int AF, int SZ>
@@ -34,7 +34,7 @@ namespace {
     }
 }
 
-namespace net {
+namespace suc::net {
     std::string strerrnum(int errnum) {
         char buffer[128];
         const char *str = ::strerror_r(errnum, buffer, sizeof(buffer));
@@ -43,7 +43,7 @@ namespace net {
 
     std::string to_string(const inaddr_storage &address) {
         using R = std::string;
-        return std::visit(overloaded{
+        return std::visit(suc::cmn::overloaded{
                               [](const in_addr &arg) -> R { return to_string(arg); },
                               [](const in6_addr &arg)-> R { return to_string(arg); },
                               [](const std::monostate &arg)-> R { return "uninitialized"; },

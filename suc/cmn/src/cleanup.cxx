@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "getaddrinfo.hxx"
+#include <suc/cmn/cleanup.hxx>
 
-namespace net {
-    std::expected<std::shared_ptr<addrinfo>, const char *> getaddrinfo(const char *node,
-                                                                       const char *service,
-                                                                       const addrinfo &hints) {
-        addrinfo *servinfo{};
-        if (int rv = getaddrinfo(node, service, &hints, &servinfo); rv != 0) {
-            return std::unexpected(gai_strerror(rv));
-        }
-        return std::shared_ptr<addrinfo>{servinfo, freeaddrinfo};
+namespace suc::cmn {
+    cleanup::cleanup(std::function<void()> &&func) : m_func{std::move(func)} {
+    }
+
+    cleanup::~cleanup() {
+        m_func();
     }
 }

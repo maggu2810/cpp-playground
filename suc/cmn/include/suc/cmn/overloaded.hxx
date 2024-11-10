@@ -12,19 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CLEANUP_HXX
-#define CLEANUP_HXX
+#ifndef SUC_CMN_OVERLOADED_HXX
+#define SUC_CMN_OVERLOADED_HXX
 
-#include <functional>
+namespace suc::cmn {
+    template<class... Ts>
+    struct overloaded : Ts... {
+        using Ts::operator()...;
+    };
+}
 
-class cleanup {
-public:
-    explicit cleanup(std::function<void()> &&func);
-
-    ~cleanup();
-
-private:
-    std::function<void()> m_func;
-};
-
-#endif //CLEANUP_HXX
+#endif //SUC_CMN_OVERLOADED_HXX

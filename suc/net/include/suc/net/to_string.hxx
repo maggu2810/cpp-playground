@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TO_STRING_HXX
-#define TO_STRING_HXX
+#ifndef SUC_NET_TO_STRING_HXX
+#define SUC_NET_TO_STRING_HXX
 
 #include "inaddr_storage.hxx"
 
 #include <string>
 
-namespace net {
+namespace suc::net {
     std::string strerrnum(int errnum);
 
     std::string to_string(const inaddr_storage &address);
@@ -43,4 +43,4 @@ namespace net {
     }
 }
 
-#endif //TO_STRING_HXX
+#endif //SUC_NET_TO_STRING_HXX

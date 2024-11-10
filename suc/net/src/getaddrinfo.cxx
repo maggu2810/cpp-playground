@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SOCKET_TYPE_HXX
-#define SOCKET_TYPE_HXX
+#include <suc/net/getaddrinfo.hxx>
 
-namespace net {
-    enum class socket_type {
-        tcp, udp
-    };
+namespace suc::net {
+    std::expected<std::shared_ptr<addrinfo>, const char *> getaddrinfo(const char *node,
+                                                                       const char *service,
+                                                                       const addrinfo &hints) {
+        addrinfo *servinfo{};
+        if (int rv = getaddrinfo(node, service, &hints, &servinfo); rv != 0) {
+            return std::unexpected(gai_strerror(rv));
+        }
+        return std::shared_ptr<addrinfo>{servinfo, freeaddrinfo};
+    }
 }
-
-#endif //SOCKET_TYPE_HXX

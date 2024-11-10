@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "cleanup.hxx"
+#ifndef SUC_NET_INADDR_STORAGE_HXX
+#define SUC_NET_INADDR_STORAGE_HXX
 
-cleanup::cleanup(std::function<void()> &&func) : m_func{std::move(func)} {
+#include <variant>
+#include <netinet/in.h>
+
+namespace suc::net {
+    using inaddr_storage = std::variant<std::monostate, in_addr, in6_addr>;
 }
 
-cleanup::~cleanup() {
-    m_func();
-}
+#endif //SUC_NET_INADDR_STORAGE_HXX

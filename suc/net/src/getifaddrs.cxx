@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GETIFADDRS_HXX
-#define GETIFADDRS_HXX
+#include <suc/net/getifaddrs.hxx>
 
-#include <expected>
-#include <ifaddrs.h>
-#include <memory>
+#include <suc/net/to_string.hxx>
 
-namespace net {
-    std::expected<std::shared_ptr<ifaddrs>, std::string> getifaddrs();
+namespace suc::net {
+    std::expected<std::shared_ptr<ifaddrs>, std::string> getifaddrs() {
+        ifaddrs *ifap{};
+        if (int rv = getifaddrs(&ifap); rv != 0) {
+            return std::unexpected(strerrnum(errno));
+        }
+        return std::shared_ptr<ifaddrs>{ifap, freeifaddrs};
+    }
 }
-
-#endif //GETIFADDRS_HXX

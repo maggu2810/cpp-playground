@@ -12,17 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GETADDRINFO_HXX
-#define GETADDRINFO_HXX
+#ifndef SUC_NET_SOCKET_TYPE_HXX
+#define SUC_NET_SOCKET_TYPE_HXX
 
-#include <expected>
-#include <memory>
-#include <netdb.h>
-
-namespace net {
-    std::expected<std::shared_ptr<addrinfo>, const char *> getaddrinfo(const char *node,
-                                                                       const char *service,
-                                                                       const addrinfo &hints);
+namespace suc::net {
+    enum class socket_type {
+        tcp, udp
+    };
 }
 
-#endif //GETADDRINFO_HXX
+#endif //SUC_NET_SOCKET_TYPE_HXX

@@ -12,30 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "sock.hxx"
+#include <suc/net/sock.hxx>
 
 #include <cstring>
 
-#include "getaddrinfo.hxx"
-
-#include "logging.hxx"
-#include "to_string.hxx"
+#include <suc/net/getaddrinfo.hxx>
+#include <suc/cmn/logging.hxx>
+#include <suc/net/to_string.hxx>
 
 #include <fcntl.h>
 
 namespace {
-    int socket_type_to_ai_sock_type(net::socket_type socket_type) {
+    int socket_type_to_ai_sock_type(suc::net::socket_type socket_type) {
         switch (socket_type) {
-            case net::socket_type::tcp: return SOCK_STREAM;
-            case net::socket_type::udp: return SOCK_DGRAM;
+            case suc::net::socket_type::tcp: return SOCK_STREAM;
+            case suc::net::socket_type::udp: return SOCK_DGRAM;
         }
         std::unreachable();
     }
 
-    int socket_type_to_ai_protocol(net::socket_type socket_type) {
+    int socket_type_to_ai_protocol(suc::net::socket_type socket_type) {
         switch (socket_type) {
-            case net::socket_type::tcp: return IPPROTO_TCP;
-            case net::socket_type::udp: return IPPROTO_UDP;
+            case suc::net::socket_type::tcp: return IPPROTO_TCP;
+            case suc::net::socket_type::udp: return IPPROTO_UDP;
         }
         std::unreachable();
     }
@@ -44,13 +43,13 @@ namespace {
         for (addrinfo *p = ai; p != nullptr; p = p->ai_next) {
             LOGD("addrinfo: flags: {}, family: {}, socktype: {}, protocol: {}, addr: {}, canonname: {}",
                  p->ai_flags, p->ai_family, p->ai_socktype, p->ai_protocol,
-                 p->ai_addr ? net::to_string(*p->ai_addr, p->ai_addrlen) : "<nullptr>",
+                 p->ai_addr ? suc::net::to_string(*p->ai_addr, p->ai_addrlen) : "<nullptr>",
                  p->ai_canonname ? p->ai_canonname : "<nullptr>");
         }
     }
 }
 
-namespace net {
+namespace suc::net {
     int create_bound_socket(socket_type socket_type, std::uint16_t port, bool non_blocking, bool reuse_addr) {
         addrinfo hints{};
         hints.ai_family = AF_UNSPEC;

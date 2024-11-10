@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "iface.hxx"
+#include <suc/net/iface.hxx>
 
-#include "logging.hxx"
-#include "overloaded.hxx"
-#include "getifaddrs.hxx"
+#include <suc/cmn/logging.hxx>
+#include <suc/cmn/overloaded.hxx>
+#include <suc/net/getifaddrs.hxx>
 
 #include <cstring>
 
@@ -59,7 +59,7 @@ namespace {
 
     template<int FAMILY, typename ADDRESS_TYPE, std::size_t OFFSET>
     std::optional<std::string> get_iface_name(const ADDRESS_TYPE &address) {
-        const auto ifap = net::getifaddrs();
+        const auto ifap = suc::net::getifaddrs();
         if (!ifap) { return {}; }
 
         for (ifaddrs *ifa = ifap.value().get(); ifa != nullptr; ifa = ifa->ifa_next) {
@@ -75,12 +75,11 @@ namespace {
     }
 }
 
-namespace iface {
-
+namespace suc::net {
 
     std::optional<std::string> get_ifacename(const inaddr_storage &address) {
         using R = std::optional<std::string>;
-        return std::visit(overloaded{
+        return std::visit(suc::cmn::overloaded{
                               [](const in_addr &arg) -> R { return get_ifacename(arg); },
                               [](const in6_addr &arg)-> R { return get_ifacename(arg); },
                               [](const std::monostate &arg)-> R { return {}; },

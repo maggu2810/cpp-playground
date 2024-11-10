@@ -12,10 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VISIT_UTILS_HXX
-#define VISIT_UTILS_HXX
+#ifndef SUC_NET_GETIFADDRS_HXX
+#define SUC_NET_GETIFADDRS_HXX
 
-template<class... Ts>
-struct overloaded : Ts... { using Ts::operator()...; };
+#include <expected>
+#include <ifaddrs.h>
+#include <memory>
 
-#endif //VISIT_UTILS_HXX
+namespace suc::net {
+    std::expected<std::shared_ptr<ifaddrs>, std::string> getifaddrs();
+}
+
+#endif //SUC_NET_GETIFADDRS_HXX

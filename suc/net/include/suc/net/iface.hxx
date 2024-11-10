@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef IFACEUTILS_HXX
-#define IFACEUTILS_HXX
+#ifndef SUC_NET_IFACE_HXX
+#define SUC_NET_IFACE_HXX
 
 #include "inaddr_storage.hxx"
 
 #include <optional>
 #include <string>
 
-namespace iface {
+namespace suc::net {
     // get interface name by address
 
     std::optional<std::string> get_ifacename(const inaddr_storage &address);
@@ -50,5 +50,4 @@ namespace iface {
     std::optional<std::string> get_ifacename(int sock);
 }
 
-
-#endif //IFACEUTILS_HXX
+#endif //SUC_NET_IFACE_HXX
