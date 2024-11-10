@@ -10,24 +10,26 @@
 #include <string>
 
 namespace net {
-std::string to_string(int errnum);
+    std::string strerrnum(int errnum);
 
-    std::string to_string(const inaddr_storage& address);
+    std::string to_string(const inaddr_storage &address);
+
     std::string to_string(const in_addr &address);
+
     std::string to_string(const in6_addr &address);
 
-    std::string to_string(const sockaddr &sa);
+    std::string to_string(const sockaddr &sa, socklen_t addrlen);
 
     inline std::string to_string(const sockaddr_storage &sa) {
-        return to_string(reinterpret_cast<const sockaddr &>(sa));
+        return to_string(reinterpret_cast<const sockaddr &>(sa), sizeof(sa));
     }
 
     inline std::string to_string(const sockaddr_in &sa) {
-        return to_string(reinterpret_cast<const sockaddr &>(sa));
+        return to_string(reinterpret_cast<const sockaddr &>(sa), sizeof(sa));
     }
 
     inline std::string to_string(const sockaddr_in6 &sa) {
-        return to_string(reinterpret_cast<const sockaddr &>(sa));
+        return to_string(reinterpret_cast<const sockaddr &>(sa), sizeof(sa));
     }
 }
 

@@ -34,7 +34,7 @@ namespace {
         for (addrinfo *p = ai; p != nullptr; p = p->ai_next) {
             LOGD("addrinfo: flags: {}, family: {}, socktype: {}, protocol: {}, addr: {}, canonname: {}",
                  p->ai_flags, p->ai_family, p->ai_socktype, p->ai_protocol,
-                 p->ai_addr ? net::to_string(*p->ai_addr) : "<nullptr>",
+                 p->ai_addr ? net::to_string(*p->ai_addr, p->ai_addrlen) : "<nullptr>",
                  p->ai_canonname ? p->ai_canonname : "<nullptr>");
         }
     }
@@ -61,13 +61,13 @@ namespace net {
                 const int sockfd = socket(p->ai_family, p->ai_socktype | socket_flags,
                                           p->ai_protocol);
                 if (sockfd == -1) {
-                    LOGE("socket: {}", to_string(errno));
+                    LOGE("socket: {}", strerrnum(errno));
                     continue;
                 }
 
                 if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
                     close(sockfd);
-                    LOGE("bind: {}", to_string(errno));
+                    LOGE("bind: {}", strerrnum(errno));
                     continue;
                 }
 
@@ -75,7 +75,7 @@ namespace net {
                     const int enable = 1;
                     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) == -1) {
                         close(sockfd);
-                        LOGE("setsockopt: {}", to_string(errno));
+                        LOGE("setsockopt: {}", strerrnum(errno));
                         continue;
                     }
                 }
@@ -113,13 +113,13 @@ namespace net {
                 const int sockfd = socket(p->ai_family, p->ai_socktype | socket_flags,
                                           p->ai_protocol);
                 if (sockfd == -1) {
-                    LOGE("socket: {}", to_string(errno));
+                    LOGE("socket: {}", strerrnum(errno));
                     continue;
                 }
 
                 if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
                     close(sockfd);
-                    LOGE("connect: {}", to_string(errno));
+                    LOGE("connect: {}", strerrnum(errno));
                     continue;
                 }
 
@@ -147,11 +147,13 @@ namespace net {
         const int enable = 1;
         const bool ipv4 = setsockopt(sock, IPPROTO_IP, IP_PKTINFO, &enable, sizeof(enable)) == -1;
         if (!ipv4) {
-            perror("setsockopt, ipv4 pktinfo");
+            const auto errnum = errno;
+            LOGW("setsockopt failed: ipv4 pktinfo: {}", strerrnum(errnum));
         }
         const bool ipv6 = setsockopt(sock, IPPROTO_IPV6, IPV6_RECVPKTINFO, &enable, sizeof(enable)) == -1;
         if (!ipv6) {
-            perror("setsockopt, ipv6 pktinfo");
+            const auto errnum = errno;
+            LOGW("setsockopt failed: ipv6 pktinfo: {}", strerrnum(errnum));
         }
         return std::make_pair(ipv4, ipv6);
     }
@@ -159,15 +161,26 @@ namespace net {
     ssize_t recvfromadv(int sockfd, void *buf, size_t len,
                         inaddr_storage *host_addr,
                         sockaddr_storage *peer_addr) {
-#if 0
-        sockaddr_storage my_sockaddr_storage_host{};
-        socklen_t my_sockaddr_storage_host_len = sizeof(my_sockaddr_storage_host);
-        if (getsockname(sockfd, reinterpret_cast<sockaddr *>(&my_sockaddr_storage_host),
-                        &my_sockaddr_storage_host_len) == 0) {
-            const auto err = errno;
-            // EPROTONOSUPPORT
-            perror("getsockname");
-            return -1;
+#if 1
+        {
+            sockaddr_storage addr_sock{};
+            socklen_t addr_sock_len = sizeof(addr_sock);
+            sockaddr_storage addr_peer{};
+            socklen_t addr_peer_len = sizeof(addr_peer);
+            if (getsockname(sockfd, reinterpret_cast<sockaddr *>(&addr_sock),
+                            &addr_sock_len) == 0) {
+                LOGD("getsockname: {}", net::to_string(reinterpret_cast<sockaddr&>(addr_sock), addr_sock_len));
+            } else {
+                const auto errnum = errno;
+                LOGW("getsockname failed: {}", strerrnum(errnum));
+            }
+            if (getpeername(sockfd, reinterpret_cast<sockaddr *>(&addr_peer),
+                            &addr_peer_len) == 0) {
+                LOGD("getpeername: {}", net::to_string(reinterpret_cast<sockaddr&>(addr_sock), addr_sock_len));
+            } else {
+                const auto errnum = errno;
+                LOGW("getpeername failed: {}", strerrnum(errnum));
+            }
         }
 #endif
 

@@ -10,8 +10,25 @@
 #include <format>
 #include <valarray>
 
+/*
+ * | 0 | EMERGENGY | System is unusable               |
+ * | 1 | ALERT     | Action must be taken immediately |
+ * | 2 | CRITICAL  | Critical conditions              |
+ * | 3 | ERROR     | Error conditions                 |
+ * | 4 | WARNING   | Warning conditions               |
+ * | 5 | NOTICE    | Normal but significant condition |
+ * | 6 | INFO      | Informational                    |
+ * | 7 | DEBUG     | Debug-level messages             |
+ */
+
 #define LOGD(...) logging::debug(__VA_ARGS__)
+#define LOGI(...) logging::info(__VA_ARGS__)
+#define LOGN(...) logging::notice(__VA_ARGS__)
+#define LOGW(...) logging::warn(__VA_ARGS__)
 #define LOGE(...) logging::err(__VA_ARGS__)
+#define LOGC(...) logging::crit(__VA_ARGS__)
+#define LOGA(...) logging::alert(__VA_ARGS__)
+#define LOGU(...) logging::emerg(__VA_ARGS__)
 
 namespace logging {
     enum class level {
